@@ -20,7 +20,7 @@ module ChefHaproxy
         thing.each do |key, value|
           case value
           when Hash, Array
-            result += config_generator(
+            result.push config_generator(
               value, [prefix, key.to_s].compact.join(' ')
             )
           when TrueClass, FalseClass
@@ -28,11 +28,13 @@ module ChefHaproxy
               result << [prefix, key.to_s].compact.join(' ')
             end
           else
-            raise TypeError.new("Expecting Hash, Array, TrueClass or FalseClass. Receive: #{value.class}")
+            result << [prefix, key.to_s, value.to_s].compact.join(' ')
           end
         end
       when Array
-        result << [prefix, v.to_s].compact.join(' ')
+        thing.each do |v|
+          result << [prefix, v.to_s].compact.join(' ')
+        end
       else
         raise TypeError.new("Expecting Hash or Array type. Received: #{thing.class}")
       end
