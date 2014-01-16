@@ -1,13 +1,17 @@
 actions :create, :delete
 default_action :create
 
-attr_reader :config
 attribute :config_directory, :kind_of => String
 
-def method_missing(name, value, &block)
-  if(name.to_sym == :config)
-    @config = value || block
+def config(value=:none, &block)
+  if(value != :none)
+    unless(value.is_a?(Hash))
+      raise Exception::ValidationFailed, "Option config must be of kind Hash! You passed #{value.inspect}"
+    end
+    @config = value
+  elsif(block)
+    @config = block
   else
-    super
+    @config
   end
 end

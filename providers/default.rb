@@ -23,9 +23,6 @@ action :create do
   if(new_resource.config.is_a?(Proc))
     chef_gem 'attribute_struct'
     require 'attribute_struct'
-
-    AttributeStruct.new.instance_eval(&new_resource.config)
-
     new_resource.config AttributeStruct.new(&new_resource.config)._dump
   end
 
